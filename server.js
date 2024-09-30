@@ -1,5 +1,6 @@
 import express from "express";
 import ideasRouter from "./routes/ideas.mjs";
+import userRouter from "./routes/user.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -38,3 +39,4 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api/ideas", ideasRouter);
+app.use("/api/user", userRouter);

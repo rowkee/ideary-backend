@@ -10,6 +10,16 @@ const getAllIdeas = async (req, res) => {
   }
 };
 
+const getIdeaByUserId = async (req, res) => {
+  const user_id = req.user._id;
+  try {
+    const ideas = await Idea.find({ user_id }).sort({ createdAt: -1 });
+    res.status(200).json(ideas);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getIdeaById = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -35,16 +45,15 @@ const postIdea = async (req, res) => {
   if (!description) emptyFields.push("description");
   if (!author) emptyFields.push("author");
   if (emptyFields.length > 0) {
-    return res
-      .status(400)
-      .json({
-        error: "Please fill in all of the required fields.",
-        emptyFields,
-      });
+    return res.status(400).json({
+      error: "Please fill in all of the required fields.",
+      emptyFields,
+    });
   }
 
   try {
-    const idea = await Idea.create({ title, description, author });
+    const user_id = req.user._id;
+    const idea = await Idea.create({ title, description, author, user_id });
     res.status(200).json(idea);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -87,4 +96,11 @@ const deleteIdeaById = async (req, res) => {
   }
 };
 
-export { getAllIdeas, postIdea, getIdeaById, updateIdeaById, deleteIdeaById };
+export {
+  getAllIdeas,
+  postIdea,
+  getIdeaById,
+  updateIdeaById,
+  deleteIdeaById,
+  getIdeaByUserId,
+};

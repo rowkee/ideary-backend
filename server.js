@@ -40,3 +40,5 @@ mongoose
 
 app.use("/api/ideas", ideasRouter);
 app.use("/api/user", userRouter);
+
+export default app;

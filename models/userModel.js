@@ -14,12 +14,30 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
 });
 
 // static signup method
-userSchema.statics.signup = async function (email, password) {
-  if (!email || !password) {
-    throw Error("Email AND password required.");
+userSchema.statics.signup = async function (
+  email,
+  password,
+  firstName,
+  lastName,
+  username
+) {
+  if (!email || !password || !firstName || !lastName || !username) {
+    throw Error("All fields must be completed amigo.");
   }
 
   if (!validator.isEmail(email)) {
@@ -40,7 +58,13 @@ userSchema.statics.signup = async function (email, password) {
 
   const hash = await bcrypt.hash(password, salt);
 
-  const user = await this.create({ email, password: hash });
+  const user = await this.create({
+    email,
+    password: hash,
+    firstName,
+    lastName,
+    username,
+  });
 
   return user;
 };

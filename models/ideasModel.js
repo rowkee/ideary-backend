@@ -10,12 +10,9 @@ const ideaSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    author: {
-      type: String,
-      required: true,
-    },
-    user_id: {
-      type: String,
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },

@@ -14,10 +14,9 @@ const getAllIdeas = async (req, res) => {
 
 const getIdeasByUserId = async (req, res) => {
   const userId = req.query.userId;
-  console.log(userId);
-  // if (!mongoose.Types.ObjectId.isValid(userId)) {
-  //   return res.status(404).json({ error: "ID incorrect format" });
-  // }
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(404).json({ error: "ID incorrect format" });
+  }
   try {
     const ideas = await Idea.find({ createdBy: userId }).sort({
       createdAt: -1,

@@ -6,7 +6,7 @@ import {
   postIdea,
   updateIdeaById,
   deleteIdeaById,
-  getIdeaByUserId,
+  getIdeasByUserId,
 } from "../controllers/ideaController.js";
 
 import requireAuth from "../middleware/requireAuth.js";
@@ -19,7 +19,7 @@ router.get("/", getAllIdeas);
 // require auth for all idea routes
 router.use(requireAuth);
 
-router.get("/account", getIdeaByUserId);
+router.get("/account", getIdeasByUserId);
 
 router.get("/:id", getIdeaById);
 

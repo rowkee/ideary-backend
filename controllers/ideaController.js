@@ -12,10 +12,16 @@ const getAllIdeas = async (req, res) => {
   }
 };
 
-const getIdeaByUserId = async (req, res) => {
-  const user_id = req.user._id;
+const getIdeasByUserId = async (req, res) => {
+  const userId = req.query.userId;
+  console.log(userId);
+  // if (!mongoose.Types.ObjectId.isValid(userId)) {
+  //   return res.status(404).json({ error: "ID incorrect format" });
+  // }
   try {
-    const ideas = await Idea.find({ user_id }).sort({ createdAt: -1 });
+    const ideas = await Idea.find({ createdBy: userId }).sort({
+      createdAt: -1,
+    });
     res.status(200).json(ideas);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -115,5 +121,5 @@ export {
   getIdeaById,
   updateIdeaById,
   deleteIdeaById,
-  getIdeaByUserId,
+  getIdeasByUserId,
 };

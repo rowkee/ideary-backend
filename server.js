@@ -1,6 +1,7 @@
 import express from "express";
 import ideasRouter from "./routes/ideas.mjs";
 import userRouter from "./routes/user.js";
+import commentsRouter from "./routes/comments.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -13,22 +14,22 @@ const port = process.env.PORT || 4000;
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-app.use((req, res, next) => {
-  next();
-});
-
 app.use(
   cors({
-    origin: `${process.env.REACT_APP_URL}`,
+    origin: process.env.REACT_APP_URL,
   })
 );
 
 // routes
+app.use("/api/ideas", ideasRouter);
+app.use("/api/user", userRouter);
+app.use("/api/comments", commentsRouter);
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+// Connect to MongoDB and start server
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -37,8 +38,5 @@ mongoose
     });
   })
   .catch((err) => console.log(err));
-
-app.use("/api/ideas", ideasRouter);
-app.use("/api/user", userRouter);
 
 export default app;

@@ -2,11 +2,20 @@ import Comment from "../models/commentModel.js";
 import mongoose from "mongoose";
 
 const createComment = async (req, res) => {
-  const { content, ideaId, author } = req.body;
+  const { content, ideaId, authorId, username } = req.body;
 
   try {
-    const comment = await Comment.create({ content, ideaId, author });
-    res.status(200).json(comment);
+    const comment = await Comment.create({
+      content,
+      ideaId,
+      authorId,
+      username,
+    });
+    const populatedComment = await Comment.findById(comment._id).populate(
+      "authorId",
+      "username"
+    );
+    res.status(200).json(populatedComment);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -16,18 +25,11 @@ const getCommentsByIdeaId = async (req, res) => {
   const { ideaId } = req.params;
 
   try {
-    console.log("==========================================");
-    console.log("🔍 FETCHING COMMENTS");
-    console.log("ideaId:", ideaId);
-    console.log("------------------------------------------");
-
-    const comments = await Comment.find({ ideaId }).sort({ createdAt: -1 });
-    console.log(`📝 Found ${comments.length} comments`);
-    console.log("==========================================");
-
+    const comments = await Comment.find({ ideaId })
+      .populate("authorId", "username")
+      .sort({ createdAt: -1 });
     res.status(200).json(comments);
   } catch (error) {
-    console.error("❌ ERROR:", error);
     res.status(400).json({ error: error.message });
   }
 };
